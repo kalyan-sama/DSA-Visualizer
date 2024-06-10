@@ -1,252 +1,275 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
 
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import ReactFlow, {
+    Background,
+    Controls,
+    Node,
+    Edge,
+    Handle,
+    NodeChange,
+    EdgeChange,
+    applyNodeChanges,
+    applyEdgeChanges,
+    Position,
+    ReactFlowInstance,
+} from "reactflow";
+import "reactflow/dist/style.css";
+
+interface CustomNodeData {
+    value: number[];
+    borderColor: string;
+}
+
+type CustomNode = Node<CustomNodeData>;
+type CustomEdge = Edge;
+
+const levelHeight = 150; // Adjust height between levels as needed
+const width = 200; // Adjust width scaling factor as needed
+
+const nodeTypes = {
+    renderArray: ({ data }: { data: CustomNodeData }) => {
+        const arr = data.value;
+        const borderColor = data.borderColor ||'border-white-500';
+        return (
+            <div className="flex" style={{ position: "relative" }}>
+                <Handle type="source" position={Position.Bottom} id="sourceHandle" />
+                {arr.map((value, index) => (
+                    <div
+                        key={`${index}`}
+                        className={`text-white text-center border-2 p-3  ${borderColor}`}
+                    >
+                        {value}
+                    </div>
+                ))}
+                <Handle type="target" position={Position.Top} id="targetHandle" />
+            </div>
+        );
+    },
+};
 
 interface Step {
-  type: string;
-  array?: number[];
-  result?: number[];
-  leftIndex?: number;
-  rightIndex?: number;
-  left?: number[];
-  right?: number[];
-  level: number;
-  parent?: string;
-  pos_x?: string;
-  pos_y?: string;
+    nodes: CustomNode[];
+    edges: CustomEdge[];
 }
-  const generateRandomArray = (size = 10): number[] => {
-    return Array.from({ length: size }, () => Math.floor(Math.random() * 100));
-  };
-  
-  
 
-const MergeSortVisualizer: React.FC = () => {
-  const [array, setArray] = useState<number[]>(generateRandomArray());
-  const [steps, setSteps] = useState<Step[]>([]);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isAutoPlay, setIsAutoPlay] = useState(false);
-  const [renderedSteps, setRenderedSteps] = useState<Step[]>([]);
-  const [displayArray, setDisplayArray] = useState(0);
+const addStep = (
+    steps: Step[],
+    nodes: CustomNode[],
+    edges: CustomEdge[]
+) => {
+    steps.push({
+        nodes: nodes.map((node) => ({ ...node, data: { ...node.data } })),
+        edges: edges.map((edge) => ({ ...edge })),
+    });
+};
 
+const mergeSort = (
+    arr: number[],
+    steps: Step[],
+    setSteps: React.Dispatch<React.SetStateAction<Step[]>>,
+    parentId: string | null = null,
+    position = { x: 0, y: 0 },
+    nodeIdCounter = { current: 1 }
+): number[] => {
+    const currentNodeId = `${nodeIdCounter.current++}`;
 
-  // useEffect(() => {
-  //   const animations: Step[] = [];
-  //   mergeSort(array.slice(), 0, animations);
-  //   setSteps(animations);
-  // }, [array]);  
+    let borderColor = 'x'; // Default color
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isAutoPlay && currentStep < steps.length - 1) {
-      interval = setInterval(() => {
-        setCurrentStep(prevStep => prevStep + 1);
-      }, 1000); // Adjust the interval duration as needed
-    } else {
-      clearInterval(interval!);
-    }
-    return () => clearInterval(interval);
-  }, [isAutoPlay, currentStep, steps]);
-
-  useEffect(() => {
-    const renderSteps = () => {
-      setRenderedSteps((prevRenderedSteps) => {
-        let newRenderedSteps = [...prevRenderedSteps];
-        const currentStepData = steps[currentStep];
-
-        const existingStepIndex = newRenderedSteps.findIndex(
-          (step) => step.level === currentStepData.level
-        );
-
-        if (existingStepIndex !== -1) {
-          if (newRenderedSteps[existingStepIndex].type !== currentStepData.type) {
-            newRenderedSteps[existingStepIndex] = currentStepData;
-          }
-
-          if(currentStepData.type === 'merge') {
-            if(currentStepData.parent === 'left') {
-              // console.log('before merge: ' + JSON.stringify(newRenderedSteps[existingStepIndex-1], null, 2));
-
-              newRenderedSteps[existingStepIndex-1].left = currentStepData.result;
-              // console.log('after merge: ' + JSON.stringify(newRenderedSteps[existingStepIndex-1], null, 2));
-
-            }
-            else if(currentStepData.parent === 'right') {
-              newRenderedSteps[existingStepIndex-1].right = currentStepData.result;
-            }
-          }
-        } else {
-          newRenderedSteps.push(currentStepData);
-        }
-
-        return newRenderedSteps;
-      });
+    const currentNode: CustomNode = {
+        id: currentNodeId,
+        type: "renderArray",
+        position: position,
+        data: { value: arr, borderColor },
     };
 
-    if (currentStep < steps.length) {
-      renderSteps();
+    if (steps.length === 0) {
+        steps.push({ nodes: [], edges: [] });
     }
-  }, [steps, currentStep])
 
-  const handleGenerateArray = () => {
-    setArray(generateRandomArray(5));
-    setCurrentStep(0);
-    setRenderedSteps([]);
-    setDisplayArray(1);
-  };
+    if (parentId) {
+        steps[steps.length - 1].edges.push({
+            id: `${parentId}-${currentNodeId}`,
+            source: parentId,
+            target: currentNodeId,
+            type: "step"
+        });
+    }
 
-  const handleStartMergeSort = () => {
-    const animations: Step[] = [];
-    mergeSort(array.slice(), 0, animations);
-    setSteps(animations);
-    setCurrentStep(0);
-    setRenderedSteps([]);
-    setIsAutoPlay(true); // Automatically start the animation
-  };
-  //Merge Sort 
-  const mergeSort = (arr: number[], level: number, animations: Step[], parent = 'top') => {
+    steps[steps.length - 1].nodes.push(currentNode);
+
+    addStep(steps, steps[steps.length - 1].nodes, steps[steps.length - 1].edges);
+    setSteps([...steps]);
+
     if (arr.length <= 1) {
-      // animations.push({ type: 'base', array: arr.slice(), level });
-      return arr;
+        return arr;
     }
+
     const mid = Math.floor(arr.length / 2);
     const left = arr.slice(0, mid);
-    
     const right = arr.slice(mid);
+    const leftPosition = {
+        x: position.x - (mid * width) / 2,
+        y: position.y + levelHeight,
+    };
+    const rightPosition = {
+        x: position.x + (mid * width) / 2,
+        y: position.y + levelHeight,
+    };
 
-    if (arr.length == 10){
-    animations.push({ type: 'split', left: left.slice(), right: right.slice(), level, parent: parent });
-    } else{
-    animations.push({ type: 'split', left: left.slice(), right: right.slice(), level, parent: parent });
+    const sortedLeft = mergeSort(left, steps, setSteps, currentNodeId, leftPosition, nodeIdCounter);
+    const sortedRight = mergeSort(right, steps, setSteps, currentNodeId, rightPosition, nodeIdCounter);
 
+    const merged = merge(sortedLeft, sortedRight);
+
+    const mergedNodeIndex = steps[steps.length - 1].nodes.findIndex(
+        (node) => node.id === currentNodeId
+    );
+    if (mergedNodeIndex !== -1) {
+        steps[steps.length - 1].nodes[mergedNodeIndex].data.value = merged;
+        steps[steps.length - 1].nodes[mergedNodeIndex].data.borderColor = 'border-green-600';
     }
 
-    const merged = merge(mergeSort(left, level + 1, animations, 'left'), mergeSort(right, level + 1, animations, 'right'), level, animations, parent);
-    animations.push({ type: 'merge', result: merged.slice(), level, parent});
-    console.log(animations);
-    return merged;
-  };
+    // Remove child nodes and edges
+    const leftNodeId = steps[steps.length - 1].nodes.find(node => node.data.value.join(',') === sortedLeft.join(','))?.id;
+    const rightNodeId = steps[steps.length - 1].nodes.find(node => node.data.value.join(',') === sortedRight.join(','))?.id;
 
-  //Merge 2 arrays
-  const merge = (left: number[], right: number[], level: number, animations: Step[], parent: string) => {
+    if (leftNodeId) {
+        steps[steps.length - 1].nodes = steps[steps.length - 1].nodes.filter(node => node.id !== leftNodeId);
+        steps[steps.length - 1].edges = steps[steps.length - 1].edges.filter(edge => edge.target !== leftNodeId);
+    }
+
+    if (rightNodeId) {
+        steps[steps.length - 1].nodes = steps[steps.length - 1].nodes.filter(node => node.id !== rightNodeId);
+        steps[steps.length - 1].edges = steps[steps.length - 1].edges.filter(edge => edge.target !== rightNodeId);
+    }
+
+    addStep(steps, steps[steps.length - 1].nodes, steps[steps.length - 1].edges);
+    setSteps([...steps]);
+
+    return merged;
+};
+
+const merge = (left: number[], right: number[]): number[] => {
     const result: number[] = [];
-    let i = 0, j = 0;
+    let i = 0,
+        j = 0;
     while (i < left.length && j < right.length) {
-      animations.push({ type: 'compare', leftIndex: i, rightIndex: j, level, left, right, parent });
-      if (left[i] < right[j]) {
-        result.push(left[i]);
-        i++;
-      } else {
-        result.push(right[j]);
-        j++;
-      }
+        if (left[i] < right[j]) {
+            result.push(left[i]);
+            i++;
+        } else {
+            result.push(right[j]);
+            j++;
+        }
     }
     while (i < left.length) result.push(left[i++]);
     while (j < right.length) result.push(right[j++]);
     return result;
-  };
+};
 
-  const renderArray = (arr: number[], highlightIndices: number[] = [], level: number, direction?: string, type?:string) => {
-    // const x = direction === 'left' ? -level * 50 : level * 50;
-    // const y = -level * 50;
+function TempFlow() {
+    const [currentStep, setCurrentStep] = useState(0);
+    const [nodes, setNodes] = useState<CustomNode[]>([]);
+    const [edges, setEdges] = useState<CustomEdge[]>([]);
+    const [steps, setSteps] = useState<Step[]>([]);
+    const [array, setArray] = useState<number[]>([]);
+
+    const generateRandomArray = (size: number): number[] => {
+        return Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+    };
+
+    const reactFlowWrapper = useRef<HTMLDivElement>(null);
+    const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
+
+    useEffect(() => {
+        if (array.length > 0) {
+            const steps: Step[] = [];
+            const nodeIdCounter = { current: 1 };
+            mergeSort(array, steps, setSteps, null, { x: 0, y: 0 }, nodeIdCounter);
+        }
+    }, [array]);
+
+    useEffect(() => {
+        if (steps.length > 0) {
+            setNodes(steps[0].nodes);
+            setEdges(steps[0].edges);
+        }
+    }, [steps]);
+
+    useEffect(() => {
+        if (reactFlowInstance.current) {
+            reactFlowInstance.current.fitView();
+        }
+    }, [nodes, edges]);
+
+    const onNodesChange = useCallback((changes: NodeChange[]) => {
+        setNodes((nds) => applyNodeChanges(changes, nds));
+    }, []);
+
+    const onEdgesChange = useCallback((changes: EdgeChange[]) => {
+        setEdges((eds) => applyEdgeChanges(changes, eds));
+    }, []);
+
+    const onNextStep = () => {
+        setCurrentStep((prevStep) => {
+            const nextStep = Math.min(prevStep + 1, steps.length - 1);
+            setNodes(steps[nextStep].nodes);
+            setEdges(steps[nextStep].edges);
+            return nextStep;
+        });
+    };
+
+    const onPreviousStep = () => {
+        setCurrentStep((prevStep) => {
+            const prevStepIndex = Math.max(prevStep - 1, 0);
+            setNodes(steps[prevStepIndex].nodes);
+            setEdges(steps[prevStepIndex].edges);
+            return prevStepIndex;
+        });
+    };
+
+    const onInit = useCallback((rfi: ReactFlowInstance) => {
+        reactFlowInstance.current = rfi;
+    }, []);
+
     return (
-    <div className="flex space-x-2" > 
-    
-      {arr.map((value, index) => (
-        
-        <motion.div
-          // animate={{ x, y }}
-          key={`${level}-${index}-${direction}`}
-          className={`text-center border-2 p-3 rounded ${highlightIndices.includes(index) ? 'border-yellow-500' : (type === 'merge' ? 'border-green-500' : 'border-grey-500')} text-white `}
-        >
-          {value}
-        </motion.div>
-      ))}
-    </div>)
-};
-
-  const renderStep = (step: Step) => {
-    if (step.type === 'split') {
-      return (
-        <div className="flex flex-row items-center mt-4">
-          <div className='text-white'>splitting</div>
-          {renderArray(step.left!, [step.leftIndex!], step.level, 'left')}
-          <div className='p-4'>          </div> 
-          {renderArray(step.right!, [step.rightIndex!], step.level, 'right')}
-        </div>
-      );
-    }
-    
-    else if (step.type === 'compare') {
-      return (
-        <div className="flex flex-row items-center mt-4">
-          <div className='text-white'>Comparing</div>
-          {renderArray(step.left!, [step.leftIndex!], step.level)}
-          <div className='p-4'>          </div> 
-          {renderArray(step.right!, [step.rightIndex!], step.level)}
-        </div>
-      );
-    } else if (step.type === 'merge') {
-      return (
-        <div className="flex flex-row items-center mt-4">
-          <div className='text-white'>Merging</div>
-          {renderArray(step.result!,[], step.level, '', 'merge')}
-        </div>
-      );
-    }
-  };
-  console.log('steps: ', steps);
-
-
-
-  return (
-    <div>
-      <button
-        className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mt-3 mr-3"
-        onClick={handleGenerateArray}
-      >
-        Generate Array
-      </button>
-      <button
-        className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mt-3"
-        onClick={handleStartMergeSort}
-      >
-        Start Merge Sort
-      </button>
-
-      {displayArray && (
-          <div className="flex flex-col items-center mt-4">
-            <div className="flex space-x-2">
-              {array.map((value, index) => (
-                <div
-                  key={index}
-                  className="text-center border-2 p-3 rounded border-grey-500 text-white"
+        <div className="h-full w-full " ref={reactFlowWrapper}>
+            <div className="controls">
+                <button
+                    className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mt-3 mr-3"
+                    onClick={() => {
+                        setArray(generateRandomArray(10));
+                    }}
                 >
-                  {value}
-                </div>
-                
-              ))}
+                    Generate Array
+                </button>
+                <button
+                    className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+                    onClick={onPreviousStep} disabled={currentStep === 0}>
+                    Previous Step
+                </button>
+                <button
+                    className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+                    onClick={onNextStep} disabled={currentStep === steps.length - 1}>
+                    Next Step
+                </button>
             </div>
-          </div>
-        )
-      }
-      <AnimatePresence>
-        {renderedSteps.map((step, index) => (
-          <motion.div
-            // key={index}
-            key={`${step.level}-${step.type}-${index}`}
-            className="flex flex-col items-center"
-            initial={{ opacity: 0, y: 0 }}
-            animate={{ opacity: 1, y: 0 }}
-            
-            transition={{ duration: 1 }}
-          >
-            {renderStep(step)}
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
-  );
-};
+            <div className="h-5/6 w-5/6 border-2 mx-auto">
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                nodeTypes={nodeTypes}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onInit={onInit}
+                fitView
+            >
+                <Background />
+                <Controls />
+            </ReactFlow>
+            </div>
+        </div>
+    );
+}
 
-export default MergeSortVisualizer;
+export default TempFlow;
