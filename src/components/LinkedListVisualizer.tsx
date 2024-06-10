@@ -51,7 +51,7 @@ const LinkedListVisualizer: React.FC = () => {
     if (inputValue !== "") {
       const newNode: Node = { value: inputValue };
 
-      // Validate index (ensure it's within bounds)
+      // Validate index 
       if (index >= 0 && index <= list.length) {
         const updatedList = [...list];
         updatedList.splice(index, 0, newNode); //array.splice(startIndex, deleteCount, item1, item2, ...);
@@ -179,6 +179,7 @@ const LinkedListVisualizer: React.FC = () => {
     )
   
   };
+
   const displayDeleteAlertMessage = (message:string) => {
     return (
       <div
@@ -215,6 +216,7 @@ const LinkedListVisualizer: React.FC = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
+          
           <div className="flex flex-row">
             <button
               className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"

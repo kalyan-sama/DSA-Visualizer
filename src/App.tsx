@@ -1,15 +1,15 @@
-// src/App.tsx
-
 import React, { useState } from "react";
 import "./App.css";
 import QueueVisualizer from "./components/QueueVisualizer";
 import StackVisualizer from "./components/stackVisualizer";
 import LinkedListVisualizer from "./components/LinkedListVisualizer";
+import MergeSortVisualizer from "./components/mergeSortVisualizer";
 
 enum VisualizerType {
   STACK,
   QUEUE,
   LINKEDLIST,
+  MERGESORT,
 }
 
 const App: React.FC = () => {
@@ -28,23 +28,57 @@ const App: React.FC = () => {
   const renderVisualizer = () => {
     switch (currentVisualizer) {
       case VisualizerType.STACK:
-        return <><StackVisualizer />
-        <button className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"  onClick={handleBackClick}>
-          Back
-        </button>
-        </>
-      case VisualizerType.QUEUE:
-        return <><QueueVisualizer />
-        <button className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"  onClick={handleBackClick}>
-          Back
-        </button>
-        </>
-        case VisualizerType.LINKEDLIST:
-          return <><LinkedListVisualizer />
-          <button className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"  onClick={handleBackClick}>
-            Back
-          </button>
+        return (
+          <>
+            <StackVisualizer />
+            <button
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              onClick={handleBackClick}
+            >
+              Back
+            </button>
           </>
+        );
+
+      case VisualizerType.QUEUE:
+        return (
+          <>
+            <QueueVisualizer />
+            <button
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              onClick={handleBackClick}
+            >
+              Back
+            </button>
+          </>
+        );
+
+      case VisualizerType.LINKEDLIST:
+        return (
+          <>
+            <LinkedListVisualizer />
+            <button
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              onClick={handleBackClick}
+            >
+              Back
+            </button>
+          </>
+        );
+
+      case VisualizerType.MERGESORT:
+        return (
+          <>
+            <MergeSortVisualizer />
+            <button
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              onClick={handleBackClick}
+            >
+              Back
+            </button>
+          </>
+        );
+
       default:
         // Render the list of visualizers (cards)
         return (
@@ -53,26 +87,32 @@ const App: React.FC = () => {
               Choose a Visualizer:
             </h1>
             <div className="flex flex-col">
-
               <button
-                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2	text-center" 
+                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2	text-center"
                 onClick={() => handleVisualizerClick(VisualizerType.STACK)}
               >
                 Stack Visualizer
               </button>
 
               <button
-                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2 text-center" 
+                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2 text-center"
                 onClick={() => handleVisualizerClick(VisualizerType.QUEUE)}
               >
                 Queue Visualizer
               </button>
 
               <button
-                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2 text-center" 
+                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2 text-center"
                 onClick={() => handleVisualizerClick(VisualizerType.LINKEDLIST)}
               >
                 Linked List Visualizer
+              </button>
+
+              <button
+                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2 text-center"
+                onClick={() => handleVisualizerClick(VisualizerType.MERGESORT)}
+              >
+                Merge Sort Visualizer
               </button>
             </div>
           </div>
@@ -80,13 +120,7 @@ const App: React.FC = () => {
     }
   };
 
-  return (
-    <div className="App">
-      {renderVisualizer()}
-
-    </div>
-  );
+  return <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900">{renderVisualizer()}</div>;
 };
 
 export default App;
-
