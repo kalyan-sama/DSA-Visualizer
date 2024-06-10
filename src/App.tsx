@@ -32,7 +32,7 @@ const App: React.FC = () => {
           <>
             <StackVisualizer />
             <button
-              className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
               onClick={handleBackClick}
             >
               Back
@@ -120,7 +120,7 @@ const App: React.FC = () => {
     }
   };
 
-  return <div className="App">{renderVisualizer()}</div>;
+  return <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900">{renderVisualizer()}</div>;
 };
 
 export default App;
