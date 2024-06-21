@@ -4,12 +4,14 @@ import QueueVisualizer from "./components/QueueVisualizer";
 import StackVisualizer from "./components/stackVisualizer";
 import LinkedListVisualizer from "./components/LinkedListVisualizer";
 import MergeSortVisualizer from "./components/mergeSortVisualizer";
+import BinarySearchVisualizer from "./components/binarySearchVisualizer";
 
 enum VisualizerType {
   STACK,
   QUEUE,
   LINKEDLIST,
   MERGESORT,
+  BINARYSORT,
 }
 
 const App: React.FC = () => {
@@ -79,6 +81,19 @@ const App: React.FC = () => {
           </>
         );
 
+      case VisualizerType.BINARYSORT:
+        return (
+          <>
+            <BinarySearchVisualizer />
+            <button
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              onClick={handleBackClick}
+            >
+              Back
+            </button>
+          </>
+        );
+
       default:
         // Render the list of visualizers (cards)
         return (
@@ -113,6 +128,13 @@ const App: React.FC = () => {
                 onClick={() => handleVisualizerClick(VisualizerType.MERGESORT)}
               >
                 Merge Sort Visualizer
+              </button>
+
+              <button
+                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2 text-center"
+                onClick={() => handleVisualizerClick(VisualizerType.BINARYSORT)}
+              >
+                Binary Search Visualizer
               </button>
             </div>
           </div>
