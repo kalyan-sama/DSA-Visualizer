@@ -6,6 +6,7 @@ import LinkedListVisualizer from "./components/LinkedListVisualizer";
 import MergeSortVisualizer from "./components/mergeSortVisualizer";
 import BinarySearchVisualizer from "./components/binarySearchVisualizer";
 
+
 enum VisualizerType {
   STACK,
   QUEUE,
@@ -85,6 +86,26 @@ const App: React.FC = () => {
         return (
           <>
             <BinarySearchVisualizer />
+          </>
+        );
+
+      case VisualizerType.LINKEDLIST:
+        return (
+          <>
+            <LinkedListVisualizer />
+            <button
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              onClick={handleBackClick}
+            >
+              Back
+            </button>
+          </>
+        );
+
+      case VisualizerType.MERGESORT:
+        return (
+          <>
+            <MergeSortVisualizer />
             <button
               className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
               onClick={handleBackClick}
