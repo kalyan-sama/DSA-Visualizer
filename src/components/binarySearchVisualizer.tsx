@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const BinarySearchVisualizer: React.FC = () => {
   const [array, setArray] = useState<number[]>([]);
@@ -9,49 +10,33 @@ const BinarySearchVisualizer: React.FC = () => {
   const [found, setFound] = useState<boolean | null>(null);
   const [step, setStep] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
-  const [isMidPhase, setIsMidPhase] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<boolean>(false);
-  const [displayNextButton, setDisplayNextButton] = useState<boolean>(false);
+  const [keyError, setKeyError] = useState<string>("");
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
+  const [midDisplayed, setMidDisplayed] = useState<boolean>(false);
 
-  //Generate random sorter array of lenght 10
+  useEffect(() => {
+    generateRandomSortedArray();
+  }, []);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isAutoPlaying && isSearching) {
+      timer = setTimeout(handleNextStep, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [isAutoPlaying, isSearching, step]);
+
   const generateRandomSortedArray = () => {
-    const length = 10; 
-    const randomArray = Array.from({ length }, () =>
-      Math.floor(Math.random() * 100)
-    );
-    randomArray.sort((a, b) => a - b); // Sort the array in ascending order
+    const randomArray = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100)).sort((a, b) => a - b);
     setArray(randomArray);
     resetSearch();
   };
 
-  //Display alert message when array is empty
-  const AlertMessage = (message:string) => {
-    return (
-      <div
-          className="alert alert-warning alert-dismissible fade show"
-          role="alert"
-        >
-          <p>{message}</p>
-          <button
-            type="button"
-            className="close"
-            data-dismiss="alert"
-            aria-label="Close"
-            onClick={()=>setErrorMessage(false)}
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-    )
-  
-  };
-
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === null) {
-        setErrorMessage(true); 
-    }
     setKey(value === "" ? null : parseInt(value));
+    setKeyError("");
     resetSearch();
   };
 
@@ -62,163 +47,169 @@ const BinarySearchVisualizer: React.FC = () => {
     setFound(null);
     setStep(0);
     setMessage("");
-    setIsMidPhase(false);
+    setIsSearching(false);
+    setIsAutoPlaying(false);
+    setMidDisplayed(false);
   };
 
   const handleStart = () => {
-    resetSearch();
-    if (array.length === 0) {
-      setErrorMessage(true); 
-    //   setMessage("Array is empty. Please generate a random sorted array first.");
-      return;
-    }
     if (key === null) {
-    //   setMessage("Please enter a key value.");
+      setKeyError("Please enter a Key");
       return;
     }
-
-    setDisplayNextButton(true); 
     resetSearch();
     setLow(0);
     setHigh(array.length - 1);
-    setFound(null);
     setStep(1);
-    setMessage(`Initializing low (L) and high (H) pointers.`);
-    setIsMidPhase(true);
+    setMessage("Binary Search Started");
+    setIsSearching(true);
   };
 
   const handleNextStep = () => {
-    if (low === null || high === null  || key === null ) return;
+    if (low === null || high === null || key === null || !isSearching) return;
 
-    if (isMidPhase) {
-        const m = Math.floor((low + high) / 2);
-        setMid(m);
-        setMessage(
-          `Calculating mid: mid = (L + H) / 2 = (${low} + ${high}) / 2 = ${m}`
-        );
-        setIsMidPhase(false);
+    if (!midDisplayed && low <= high) {
+      const newMid = Math.floor((low + high) / 2);
+      setMid(newMid);
+      setMidDisplayed(true);
+      setMessage( `Calculating mid index: mid = (L + H) / 2 = (${low} + ${high}) / 2 = ${mid}`);
+    } else {
+      if (array[mid!] === key) {
+        setFound(true);
+        setMessage(`Key ${key} found at index ${mid}.`);
+        setIsSearching(false);
+        setIsAutoPlaying(false);
+      } else if (array[mid!] < key) {
+        setLow(mid! + 1);
+        setMessage(`Key (${key}) is greater than mid element (${array[mid!]}). Moving low to mid + 1 (low = ${mid! + 1}).`);
       } else {
-    const binarySearchStep = (low: number, high: number) => {
+        setHigh(mid! - 1);
+        setMessage(`Key (${key}) is less than mid element (${array[mid!]}). Moving high to mid - 1 (high = ${mid! - 1}).`);
+      }
+
       if (low > high) {
         setFound(false);
         setMessage(`low (${low}) is greater than high (${high}). Key ${key} not found in the array.`);
-        setDisplayNextButton(false); 
-        return;
+        setIsSearching(false);
+        setIsAutoPlaying(false);
       }
 
-      const mid = Math.floor((low + high) / 2);
-      setMid(mid);
-      setMessage(
-        `Calculating mid: mid = (low + high) / 2 = (${low} + ${high}) / 2 = ${mid}`
-      );
+      setMidDisplayed(false);
+    }
 
-      if (array[mid] === key) {
-        setFound(true);
-        setMessage(`Key ${key} found at index ${mid}.`);
-        setDisplayNextButton(false); 
-
-      } else if (array[mid] < key) {
-        setLow(mid + 1);
-        setMessage(
-          `Key(${key}) is greater than mid element (${array[mid]}). Moving low to mid + 1 (low = ${mid + 1}).`
-        );
-      } else {
-        setHigh(mid - 1);
-        setMessage(
-          `Key(${key}) is less than mid element (${array[mid]}). Moving high to mid - 1 (high = ${mid - 1}).`
-        );
-      }
-    };
-
-
-    binarySearchStep(low, high);
     setStep(step + 1);
-    setIsMidPhase(true);
   };
-}
 
   return (
-    <div className="flex flex-col items-center">
-
-        <button
-          className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
-          onClick={generateRandomSortedArray}
-        >
-          Generate Random Sorted Array
-        </button>
-
-        <div className="flex flex-row items-center">
-        <div className="mt-4 mb-4">
-        <label className="block mb-2">
-          Key:
-          <input
-            type="number"
-            // value={key}
-            required = {true}
-            onChange={handleKeyChange}
-            className="ml-2 p-2 border rounded text-black mb-2 mr-2"
-          />
-        </label>
-      </div>
-      <button
-          className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
-          onClick={handleStart}
-          disabled={low !== null && high !== null }
-        >
-          Start Search
-        </button>
-        </div>
-        {errorMessage && AlertMessage("Array is empty. Please generate a random sorted array first.")}
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-4">
+      <div className="container mx-auto max-w-5xl">
+        <h1 className="text-xl font-bold mb-8 text-center text-white">Binary Search Visualizer</h1>
         
-      
-      <div className="flex mb-4 space-x-1">
-        {array.map((value, index) => (
-          <div
-            key={index}
-            className={`relative w-12 h-24 flex flex-col items-center justify-center ${
-              low !== null && high !== null && (index < low || index > high)
-                ? "opacity-50"
-                : ""
-            }`}
+        {/* buttons section */}
+        <div className="flex flex-wrap justify-center gap-2 mb-4">
+          <button className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2" onClick={generateRandomSortedArray}>
+            New Array
+          </button>
+
+          <div className="relative">
+            <input
+              type="number"
+              onChange={handleKeyChange}
+              className={`p-2 border-2 rounded-lg text-white w-24 bg-gray-800 ${keyError ? "border-red-500" : "border-white"}`}
+              placeholder="Key"
+            />
+            {keyError && <div className="absolute left-0 top-full mt-1 text-red-500 text-xs">{keyError}</div>}
+          </div>
+
+          <button className="bg-green-600 text-white font-semibold px-3 p-2 rounded hover:bg-green-700 mb-3 mr-2" onClick={handleStart} disabled={isSearching}>
+            Start
+          </button>
+
+          <button className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2" onClick={handleNextStep} disabled={!isSearching || found !== null}>
+            Next Step
+          </button>
+
+          <button
+            className={`text-white font-semibold px-3 p-2 rounded mb-3 mr-2 ${isAutoPlaying ? "bg-red-600" : "bg-yellow-600"}`}
+            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+            disabled={!isSearching || found !== null}
           >
-            {index === mid && (
-              <div className="absolute top-0 text-red-500">{key}</div>
-            )}
-            <div
-              className={`w-12 h-12 border-2 flex items-center justify-center ${
-                index === mid ? "border-yellow-700" : ""
-              } ${found && index === mid ? "border-green-700" : ""} `}
-            >
-              {value}
-            </div>
-            <div className="absolute bottom-0 flex space-x-1">
-              {index === low && <span className="text-blue-500">L</span>}
-              {index === mid && <span className="text-green-500">M</span>}
-              {index === high && <span className="text-red-500">H</span>}
-            </div>
+            {isAutoPlaying ? "Pause" : "Auto"}
+          </button>
+        </div>
+
+        {/* End of buttons Section */}
+
+        {/* Array display section */}
+
+        <div className="mb-2 bg-gray-800 p-6 rounded-lg">
+          <div className="flex justify-center space-x-2 mb-8">
+            {array.map((value, index) => (
+              <div key={index} className="relative w-12 flex flex-col items-center">
+                <div
+                  className={`w-12 h-12 border-2 flex items-center justify-center text-lg font-semibold rounded-lg
+                    ${
+                        found && index === mid
+                          ? "border-green-500 bg-green-900 text-green-100"
+                          : index === mid
+                          ? "border-yellow-500 bg-yellow-900 text-yellow-100"
+                          : index === low || index === high
+                          ? "border-blue-500"
+                          : ""
+                      }
+                    ${(low !== null && high !== null && (index < low || index > high)) ? "opacity-50" : ""}
+                  `}
+                >
+                  {value}
+                </div>
+                <div className="text-xs text-gray-400 mt-1">{index}</div>
+                <div className="absolute top-full mt-2 flex space-x-1 text-sm font-bold">
+                  {index === low && (
+                    <motion.span className="text-blue-400" initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 0.3, ease: "easeOut" }}>
+                      L
+                    </motion.span>
+                  )}
+                  {index === mid && (
+                    <motion.span className="text-yellow-400" initial={{ y: -20 }} animate={{ y: 0 }} transition={{ duration: 0.3, ease: "easeOut" }}>
+                      M
+                    </motion.span>
+                  )}
+                  {index === high && (
+                    <motion.span className="text-red-400" initial={{ x: 100 }} animate={{ x: 0 }} transition={{ duration: 0.3, ease: "easeOut" }}>
+                      H
+                    </motion.span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="flex space-x-4">
-        
-        {displayNextButton && <button
-          className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
-          onClick={handleNextStep}
-          disabled={ low === null || high === null}
-        >
-          Next Step
-        </button>}
-      </div>
-      <div className="mt-4">
-        {message && (
-          <div className="text-white-500">
-            <div>Key = {key}</div>
-            <div>Low = {low}</div>
-            <div>High = {high}</div>
-            <div className={`${mid === null ? 'hidden' : ''}`}>Mid = {mid}</div>
-            <div className={`${found === true ? 'text-green-500' : found === false ? 'text-red-500' :''}`}>{message}</div>
-          </div>
-        )}
+          <p className={`text-xl font-bold mt-2 ${found === true ? "text-green-400" : found === false ? "text-red-400" : ""}`}>
+            {found === true ? `Key found at index: ${mid}` : found === false ? "Key not found" : ""}
+          </p>
+        </div>
+
+        {/* End of Array display section */}
+
+        {/* Steps Section */}
+
+        <div className="bg-gray-800 p-3 rounded-lg">
+          <h2 className="text-xl font-semibold mb-2 underline">Search Steps:</h2>
+          
+          <div>
+                <p><strong>Key:</strong> {key !== null ? key : 'Not set'}</p>
+          </div>  
+          <div className={`mb-2 text-lg ${step === 0 ? "hidden" : ""}`}>
+            <strong>Step-{step}:</strong> {message}
+          </div> 
+          <div className="flex flex-row">
+                    <p className="mr-4"><strong>Low:</strong> {low !== null ? low : 'Not set'}</p>
+                    <p className="mr-4"><strong>High:</strong> {high !== null ? high : 'Not set'}</p>
+                    <p className="mr-4"><strong>Mid:</strong> {mid !== null ? mid : 'Not set'}</p>
+                </div>
+        </div>
+
+        {/*End of Steps Section */}
+
       </div>
     </div>
   );
