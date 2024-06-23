@@ -12,7 +12,7 @@ enum VisualizerType {
   QUEUE,
   LINKEDLIST,
   MERGESORT,
-  BINARYSORT,
+  BINARYSEARCH,
 }
 
 const App: React.FC = () => {
@@ -82,10 +82,16 @@ const App: React.FC = () => {
           </>
         );
 
-      case VisualizerType.BINARYSORT:
+      case VisualizerType.BINARYSEARCH:
         return (
           <>
             <BinarySearchVisualizer />
+            <button
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              onClick={handleBackClick}
+            >
+              Back
+            </button>
           </>
         );
 
@@ -153,7 +159,7 @@ const App: React.FC = () => {
 
               <button
                 className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2 text-center"
-                onClick={() => handleVisualizerClick(VisualizerType.BINARYSORT)}
+                onClick={() => handleVisualizerClick(VisualizerType.BINARYSEARCH)}
               >
                 Binary Search Visualizer
               </button>
