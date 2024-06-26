@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
+const MAX_ARRAY_SIZE = 15;
+
 const BinarySearchVisualizer: React.FC = () => {
   const [array, setArray] = useState<number[]>([]);
   const [key, setKey] = useState<number | null>(null);
@@ -16,7 +18,7 @@ const BinarySearchVisualizer: React.FC = () => {
   const [midDisplayed, setMidDisplayed] = useState<boolean>(false);
 
   useEffect(() => {
-    generateRandomSortedArray();
+    generateRandomSortedArray(MAX_ARRAY_SIZE);
   }, []);
 
   useEffect(() => {
@@ -27,8 +29,8 @@ const BinarySearchVisualizer: React.FC = () => {
     return () => clearTimeout(timer);
   }, [isAutoPlaying, isSearching, step]);
 
-  const generateRandomSortedArray = () => {
-    const randomArray = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100)).sort((a, b) => a - b);
+  const generateRandomSortedArray = (size: number) => {
+    const randomArray = Array.from({ length: size }, () => Math.floor(Math.random() * 100)).sort((a, b) => a - b);
     setArray(randomArray);
     resetSearch();
   };
@@ -107,7 +109,7 @@ const BinarySearchVisualizer: React.FC = () => {
         
         {/* buttons section */}
         <div className="flex flex-wrap justify-center gap-2 mb-4">
-          <button className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2" onClick={generateRandomSortedArray}>
+          <button className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2" onClick={() => {generateRandomSortedArray(MAX_ARRAY_SIZE)}}>
             New Array
           </button>
 

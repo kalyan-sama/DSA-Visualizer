@@ -1,95 +1,124 @@
-// src/components/StackVisualizer.tsx
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import React, { useState } from "react";
+const MAX_STACK_ITEMS = 20;
 
 const StackVisualizer: React.FC = () => {
-  // Initialize an empty stack (using an array)
-  const [stack, setStack] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string | "">("");
+	const [stack, setStack] = useState<string[]>([]);
+	const [inputValue, setInputValue] = useState<string>("");
+	const [error, setError] = useState<string>("");
+	const [inputError, setInputError] = useState<string>("");
 
-  // Function to push an element onto the stack
-  const pushToStack = (element: string) => {
-    setStack([...stack, element]);
-  };
+	useEffect(() => {
+		if (error) {
+			const timer = setTimeout(() => setError(""), 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [error]);
 
-  // Function to pop the top element from the stack
-  const popFromStack = () => {
-    if (stack.length > 0) {
-      const updatedStack = stack.slice(0, -1);
-      setStack(updatedStack);
-    }
-  };
+	useEffect(() => {
+		if (inputError) {
+			const timer = setTimeout(() => setInputError(""), 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [inputError]);
 
-  // Function to get the top element without removing it
-  const getTopElement = () => {
-    if (stack.length > 0) {
-      return stack[stack.length - 1];
-    }
-    return null; // Stack is empty
-  };
+	const pushToStack = (element: string) => {
+		if (!element) {
+			setInputError("Enter element to push");
+			return;
+		}
+		if (stack.length >= MAX_STACK_ITEMS) {
+			setError("Stack is full (max 10 items)");
+			return;
+		}
+		setStack([...stack, element]);
+		setInputValue("");
+		setInputError("");
+	};
 
-  // Function to clear the entire stack
-  const clearStack = () => {
-    setStack([]);
-  };
+	const popFromStack = () => {
+		if (stack.length > 0) {
+			const updatedStack = stack.slice(0, -1);
+			setStack(updatedStack);
+		} else {
+			setError("Cannot pop from an empty stack");
+		}
+	};
 
-  return (
-    <div className="max-w-md w-full p-8 mx-auto">
-      <h1 className="text-xl text-white font-semibold mb-3">
-        Stack Visualizer
-      </h1>
-      <div>
-        <input
-          type="text"
-          className="w-full p-2 border rounded mb-3 text-black"
-          placeholder="Enter a value to push..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <div className="flex flex-row">
-          <button
-            className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2" 
-            onClick={() => {
-              if (inputValue != "") {
-                pushToStack(inputValue);
-                setInputValue("");
-              } else return false;
-            }}
-          >
-            Push
-          </button>
-          <button
-            className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2" 
-            onClick={popFromStack}
-          >
-            Pop
-          </button>
-          <button
-            className="flex-1 bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3" 
-            onClick={clearStack}
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-      <div>
-        <p className="mb-2">Top Element: {getTopElement() || "Stack is empty"}</p>
-        <ul className="list-group">
-          {stack
-            .slice()
-            .reverse()
-            .map((item, index) => (
-              <li
-                className=" border text-center border-gray-300 rounded border-2 p-1 "
-                key={index}
-              >
-                {item}
-              </li>
-            ))}
-        </ul>
-      </div>
-    </div>
-  );
+	const getTopElement = () => stack[stack.length - 1] || "Stack is empty";
+
+	const clearStack = () => setStack([]);
+
+	return (
+		<div className="max-w-md w-full p-8 mx-auto bg-gray-800 rounded-lg shadow-lg">
+			<h1 className="text-2xl text-white font-bold mb-6 text-center">
+				Stack Visualizer
+			</h1>
+			<div className="mb-6">
+				<input
+					type="text"
+					className={`w-full p-3 border-2 rounded mb-3 text-black bg-gray-100 ${
+						inputError ? 'border-red-500' : ''
+					}`}
+					placeholder="Enter a value to push..."
+					value={inputValue}
+					onChange={(e) => setInputValue(e.target.value)}
+					onKeyDown={(e) => e.key === "Enter" && pushToStack(inputValue)}
+
+				/>
+				{inputError && (
+					<p className="text-red-500 text-sm mb-2">{inputError}</p>
+				)}
+				<div className="flex flex-row space-x-2">
+					<button
+						className="flex-1 bg-purple-600 text-white font-semibold p-2 rounded hover:bg-purple-700"
+						onClick={() => pushToStack(inputValue)}
+					>
+						Push
+					</button>
+					<button
+						className="flex-1 bg-red-600 text-white font-semibold p-2 rounded hover:bg-red-700"
+						onClick={popFromStack}
+					>
+						Pop
+					</button>
+					<button
+						className="flex-1 bg-blue-600 text-white font-semibold p-2 rounded hover:bg-blue-700"
+						onClick={clearStack}
+					>
+						Clear
+					</button>
+				</div>
+			</div>
+			{error && (
+				<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+					<span className="block sm:inline">{error}</span>
+				</div>
+			)}
+			<div className="bg-gray-700 p-4 rounded-lg">
+				<p className="mb-4 text-lg font-semibold text-white">
+					Top Element: <span className="text-yellow-400">{getTopElement()}</span>
+				</p>
+				<div className="space-y-2">
+					<AnimatePresence>
+						{stack.slice().reverse().map((item, index) => (
+							<motion.div
+								key={`${item}-${stack.length - 1 - index}`}
+								initial={{ opacity: 0, y: -20 }}
+								animate={{ opacity: 1, y: 0 }}
+								exit={{ opacity: 0, y: -20 }}
+								transition={{ duration: 0.2 }}
+								className="border-2 text-center border-white rounded border-2 p-1 text-white"
+							>
+								{item}
+							</motion.div>
+						))}
+					</AnimatePresence>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default StackVisualizer;
