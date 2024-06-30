@@ -5,6 +5,7 @@ import StackVisualizer from "./components/stackVisualizer";
 import LinkedListVisualizer from "./components/LinkedListVisualizer";
 import MergeSortVisualizer from "./components/mergeSortVisualizer";
 import BinarySearchVisualizer from "./components/binarySearchVisualizer";
+import BST from "./components/BST";
 
 
 enum VisualizerType {
@@ -13,6 +14,7 @@ enum VisualizerType {
   LINKEDLIST,
   MERGESORT,
   BINARYSEARCH,
+  BST,
 }
 
 const App: React.FC = () => {
@@ -35,7 +37,7 @@ const App: React.FC = () => {
           <>
             <StackVisualizer />
             <button
-              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 m-3"
               onClick={handleBackClick}
             >
               Back
@@ -48,7 +50,7 @@ const App: React.FC = () => {
           <>
             <QueueVisualizer />
             <button
-              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 m-3"
               onClick={handleBackClick}
             >
               Back
@@ -61,7 +63,7 @@ const App: React.FC = () => {
           <>
             <LinkedListVisualizer />
             <button
-              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 m-3"
               onClick={handleBackClick}
             >
               Back
@@ -74,7 +76,7 @@ const App: React.FC = () => {
           <>
             <MergeSortVisualizer />
             <button
-              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 m-3"
               onClick={handleBackClick}
             >
               Back
@@ -87,7 +89,7 @@ const App: React.FC = () => {
           <>
             <BinarySearchVisualizer />
             <button
-              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 m-3"
               onClick={handleBackClick}
             >
               Back
@@ -95,32 +97,18 @@ const App: React.FC = () => {
           </>
         );
 
-      case VisualizerType.LINKEDLIST:
+        case VisualizerType.BST:
         return (
           <>
-            <LinkedListVisualizer />
+            <BST />
             <button
-              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
+              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 m-3"
               onClick={handleBackClick}
             >
               Back
             </button>
           </>
         );
-
-      case VisualizerType.MERGESORT:
-        return (
-          <>
-            <MergeSortVisualizer />
-            <button
-              className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2"
-              onClick={handleBackClick}
-            >
-              Back
-            </button>
-          </>
-        );
-
       default:
         // Render the list of visualizers (cards)
         return (
@@ -163,13 +151,19 @@ const App: React.FC = () => {
               >
                 Binary Search Visualizer
               </button>
+              <button
+                className="flex-1 max-w-xs bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mr-2 text-center"
+                onClick={() => handleVisualizerClick(VisualizerType.BST)}
+              >
+                Binary Search Tree Visualizer
+              </button>
             </div>
           </div>
         );
     }
   };
 
-  return <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900">{renderVisualizer()}</div>;
+  return <div className="h-full w-full flex flex-col items-center justify-center bg-gray-900">{renderVisualizer()}</div>;
 };
 
 export default App;

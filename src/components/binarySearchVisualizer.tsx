@@ -63,7 +63,7 @@ const BinarySearchVisualizer: React.FC = () => {
     setLow(0);
     setHigh(array.length - 1);
     setStep(1);
-    setMessage("Binary Search Started");
+    setMessage(`Binary Search Started. Searching for ${key}...`);
     setIsSearching(true);
   };
 
@@ -103,7 +103,7 @@ const BinarySearchVisualizer: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-4">
+    <div className="h-full bg-gray-900 text-gray-100 p-4">
       <div className="container mx-auto max-w-5xl">
         <h1 className="text-xl font-bold mb-8 text-center text-white">Binary Search Visualizer</h1>
         

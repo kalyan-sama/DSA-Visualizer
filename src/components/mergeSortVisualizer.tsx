@@ -425,7 +425,7 @@ function MergeSortVisualizer() {
     <div className="flex w-full h-screen">
       <div className="w-1/4 p-4">
         <h1 className="text-xl font-bold mb-8 text-center text-white">
-          Binary Search Visualizer
+          Merge Sort Visualizer
         </h1>
         <div className="controls flex flex-col">
           <button
@@ -462,7 +462,7 @@ function MergeSortVisualizer() {
           </button>
         </div>
         <div className="mt-4">
-          <h3 className="font-bold">Sorting Steps:</h3>
+          <h3 className="text-xl underline font-bold">Sorting Steps:</h3>
           <p>{stepExplanation}</p>
         </div>
       </div>
