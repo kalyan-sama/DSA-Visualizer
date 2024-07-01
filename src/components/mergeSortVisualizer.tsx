@@ -474,10 +474,13 @@ function MergeSortVisualizer() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onInit={onInit}
+          nodesDraggable={false}
           fitView
         >
           <Background />
-          <Controls />
+          <Controls 
+            showInteractive={false}>
+          </Controls>
         </ReactFlow>
       </div>
     </div>

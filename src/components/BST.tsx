@@ -707,10 +707,13 @@ const BST: React.FC = () => {
             style: { strokeWidth: 2 },
             markerEnd: { type: MarkerType.ArrowClosed },
           }}
+          nodesDraggable={false}
           fitView
         >
             <Background/ >
-            <Controls />
+            <Controls 
+              showInteractive={false}>
+            </Controls>
             </ReactFlow>
       </div>
     </div>
