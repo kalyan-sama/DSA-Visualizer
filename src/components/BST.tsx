@@ -16,7 +16,7 @@ interface TreeNode {
   right: TreeNode | null;
 }
 
-const MAX_ARRAY_SIZE = 15;
+const MAX_ARRAY_SIZE = 12;
 const border_yellow = "#eab308";
 const bg_yellow = "#713f12";
 const border_green = "#0ad655";
