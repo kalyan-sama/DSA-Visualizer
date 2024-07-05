@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Popup from "./popup";
 
 interface Node {
   value: string;
@@ -21,6 +22,7 @@ const LinkedListVisualizer: React.FC = () => {
   const [showInsertPopUp, setShowInsertPopUp] = useState(false);
   const [showDeletePopUp, setShowDeletePopUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const MAX_LIST_SIZE = 15;
 
@@ -112,7 +114,14 @@ const LinkedListVisualizer: React.FC = () => {
           <button className="bg-blue-600 text-white font-semibold p-2 rounded hover:bg-blue-700" onClick={() => setShowDeletePopUp(true)}>Delete At Index</button>
           <button className="bg-red-600 text-white font-semibold p-2 rounded hover:bg-red-700" onClick={handleDeleteHead}>Delete Head</button>
           <button className="bg-red-600 text-white font-semibold p-2 rounded hover:bg-red-700" onClick={handleDeleteTail}>Delete Tail</button>
+          <button
+            onClick={() => setIsPopupOpen(true)}
+            className="col-span-2 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700"
+          >
+            Open Explanation & Code
+          </button>
         </div>
+        {isPopupOpen && <Popup codeFileName={"utils/linked list/linked_list.py"} explanationFileName={"utils/linked list/linkedList.html"} onClose={() => setIsPopupOpen(false)} />}
 
         {errorMessage && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">

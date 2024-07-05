@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Sort Algorithm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Merge Sort Algorithm</h1>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Definition</h2>
+            <p>Merge sort is a divide-and-conquer algorithm that recursively divides an array into smaller subarrays, sorts them, and then merges them back together to produce a sorted array.</p>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">How It Works</h2>
+            <p class="mb-4">Merge sort follows these steps:</p>
+            <ol class="list-decimal list-inside space-y-2">
+                <li>Divide: The algorithm starts by dividing the unsorted array into n subarrays, each containing one element (an array of one element is considered sorted).</li>
+                <li>Conquer: Recursively sort the subarrays by repeatedly dividing them until each subarray has only one element.</li>
+                <li>Merge: Repeatedly merge the sorted subarrays to produce new sorted subarrays until there is only one subarray remaining. This will be the sorted array.</li>
+            </ol>
+            <p class="mt-4">Detailed explanation of the merge process:</p>
+            <ul class="list-disc list-inside space-y-2 mt-2">
+                <li>Compare the elements of two subarrays starting from the first element of each.</li>
+                <li>Select the smaller element and add it to the merged array.</li>
+                <li>Move to the next element in the subarray from which the element was selected.</li>
+                <li>Repeat this process until all elements from both subarrays are merged.</li>
+                <li>If one subarray is exhausted, add all remaining elements from the other subarray to the merged array.</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Time and Space Complexity</h2>
+            <ul class="list-disc list-inside">
+                <li>Time Complexity: O(n log n) in all cases</li>
+                <li>Space Complexity: O(n)</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Advantages</h2>
+            <ul class="list-disc list-inside">
+                <li>Stable sorting algorithm</li>
+                <li>Guaranteed O(n log n) time complexity</li>
+                <li>Efficient for large datasets</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Applications</h2>
+            <ul class="list-disc list-inside">
+                <li>External sorting</li>
+                <li>Sorting linked lists</li>
+                <li>Inversion count problem</li>
+                <li>Used in various database systems</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

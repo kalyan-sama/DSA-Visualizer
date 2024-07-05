@@ -6,12 +6,14 @@ import LinkedListVisualizer from "./components/LinkedListVisualizer";
 import MergeSortVisualizer from "./components/mergeSortVisualizer";
 import BinarySearchVisualizer from "./components/binarySearchVisualizer";
 import BST from "./components/BST";
+import LinearSearchVisualizer from "./components/LinearSearchVisualizer";
 
 const visualizers = {
   stack: { component: StackVisualizer, name: "Stack Visualizer" },
   queue: { component: QueueVisualizer, name: "Queue Visualizer" },
   linkedList: { component: LinkedListVisualizer, name: "Linked List Visualizer" },
   mergeSort: { component: MergeSortVisualizer, name: "Merge Sort Visualizer" },
+  linearSearch: { component: LinearSearchVisualizer, name: "Linear Search Visualizer" },
   binarySearch: { component: BinarySearchVisualizer, name: "Binary Search Visualizer" },
   bst: { component: BST, name: "Binary Search Tree Visualizer" },
 };
@@ -64,6 +66,7 @@ const App: React.FC = () => {
           <VisualizerButton visualizerKey="queue" className="col-span-1" />
           <VisualizerButton visualizerKey="linkedList" className="col-span-1" />
           <VisualizerButton visualizerKey="mergeSort" className="col-span-1" />
+          <VisualizerButton visualizerKey="linearSearch" className="col-span-1" />
           <VisualizerButton visualizerKey="binarySearch" className="col-span-1" />
           <VisualizerButton visualizerKey="bst" className="col-span-1" />
         </div>
