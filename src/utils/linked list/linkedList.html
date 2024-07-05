@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List Data Structure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Linked List Data Structure</h1>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Definition</h2>
+            <p>A linked list is a linear data structure where elements are stored in nodes. Each node contains a data field and a reference (or link) to the next node in the sequence. Unlike arrays, linked lists do not store elements in contiguous memory locations.</p>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Operations and Time Complexities</h2>
+            <ul class="list-disc list-inside space-y-4">
+                <li>
+                    <strong>Insert at Head:</strong> Add a new node at the beginning of the list.
+                    <br>Time Complexity: O(1)
+                </li>
+                <li>
+                    <strong>Insert at Tail:</strong> Add a new node at the end of the list.
+                    <br>Time Complexity: O(1) 
+                </li>
+                <li>
+                    <strong>Insert at Index:</strong> Add a new node at a specific position.
+                    <br>Time Complexity: O(n)
+                </li>
+                <li>
+                    <strong>Delete at Head:</strong> Remove the first node of the list.
+                    <br>Time Complexity: O(1)
+                </li>
+                <li>
+                    <strong>Delete at Tail:</strong> Remove the last node of the list.
+                    <br>Time Complexity: O(n)
+                </li>
+                <li>
+                    <strong>Delete at Index:</strong> Remove a node at a specific position.
+                    <br>Time Complexity: O(n)
+                </li>
+                <li>
+                    <strong>Search:</strong> Find a node with a specific value.
+                    <br>Time Complexity: O(n)
+                </li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Advantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Dynamic size: Can grow or shrink at runtime</li>
+                <li>Efficient insertion and deletion at the beginning</li>
+                <li>No memory wastage (allocates exact memory required)</li>
+                <li>Implementation of other data structures like stacks, queues, and graphs</li>
+                <li>Flexibility in adding or removing elements</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Disadvantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>More memory usage due to storage of pointers</li>
+                <li>No random access: Traversal is needed to access an element</li>
+                <li>Reverse traversing is difficult in singly linked lists</li>
+                <li>Risk of memory leaks if not managed properly</li>
+                <li>Cache performance is poor compared to arrays</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Use Cases</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Implementation of stacks and queues</li>
+                <li>Symbol table management in compiler design</li>
+                <li>Undo functionality in applications</li>
+                <li>Hash tables with chaining for collision resolution</li>
+                <li>Adjacency lists representation of graphs</li>
+                <li>Music playlists</li>
+                <li>Image viewer (previous and next functionality)</li>
+                <li>Browser cache implementation</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

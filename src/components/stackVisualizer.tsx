@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Popup from "./popup";
 
 const MAX_STACK_ITEMS = 20;
 
@@ -8,6 +9,7 @@ const StackVisualizer: React.FC = () => {
 	const [inputValue, setInputValue] = useState<string>("");
 	const [error, setError] = useState<string>("");
 	const [inputError, setInputError] = useState<string>("");
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
 	useEffect(() => {
 		if (error) {
@@ -29,7 +31,7 @@ const StackVisualizer: React.FC = () => {
 			return;
 		}
 		if (stack.length >= MAX_STACK_ITEMS) {
-			setError("Stack is full (max 10 items)");
+			setError(`Stack is full (max ${MAX_STACK_ITEMS} items)`);
 			return;
 		}
 		setStack([...stack, element]);
@@ -52,16 +54,17 @@ const StackVisualizer: React.FC = () => {
 
 	return (
 		<div className="max-w-md w-full p-8 mx-auto bg-gray-800 rounded-lg shadow-lg">
+
 			<h1 className="text-2xl text-white font-bold mb-6 text-center">
 				Stack Visualizer
 			</h1>
-			<div className="mb-6">
+			<div className="mb-2">
 				<input
 					type="text"
-					className={`w-full p-3 border-2 rounded mb-3 text-black bg-gray-100 ${
-						inputError ? 'border-red-500' : ''
-					}`}
+					className={`w-full p-2 border-2 rounded mb-2 text-black bg-gray-100 ${inputError ? 'border-red-500' : ''
+						}`}
 					placeholder="Enter a value to push..."
+					maxLength={10}
 					value={inputValue}
 					onChange={(e) => setInputValue(e.target.value)}
 					onKeyDown={(e) => e.key === "Enter" && pushToStack(inputValue)}
@@ -70,25 +73,34 @@ const StackVisualizer: React.FC = () => {
 				{inputError && (
 					<p className="text-red-500 text-sm mb-2">{inputError}</p>
 				)}
-				<div className="flex flex-row space-x-2">
+				<div className="flex flex-col">
+					<div className="flex flex-row space-x-2">
+						<button
+							className="flex-1 bg-purple-600 text-white font-semibold p-2 rounded hover:bg-purple-700"
+							onClick={() => pushToStack(inputValue)}
+						>
+							Push
+						</button>
+						<button
+							className="flex-1 bg-red-600 text-white font-semibold p-2 rounded hover:bg-red-700"
+							onClick={popFromStack}
+						>
+							Pop
+						</button>
+						<button
+							className="flex-1 bg-yellow-600 text-white font-semibold p-2 rounded hover:bg-yellow-700"
+							onClick={clearStack}
+						>
+							Clear
+						</button>
+					</div>
 					<button
-						className="flex-1 bg-purple-600 text-white font-semibold p-2 rounded hover:bg-purple-700"
-						onClick={() => pushToStack(inputValue)}
+						onClick={() => setIsPopupOpen(true)}
+						className="flex-1 max-w-md mt-2 py-2 bg-blue-600 text-white rounded mb-4"
 					>
-						Push
+						Open Explanation & Code
 					</button>
-					<button
-						className="flex-1 bg-red-600 text-white font-semibold p-2 rounded hover:bg-red-700"
-						onClick={popFromStack}
-					>
-						Pop
-					</button>
-					<button
-						className="flex-1 bg-blue-600 text-white font-semibold p-2 rounded hover:bg-blue-700"
-						onClick={clearStack}
-					>
-						Clear
-					</button>
+					{isPopupOpen && <Popup codeFileName={"utils/stack/stack.py"} explanationFileName={"utils/stack/stack.html"} onClose={() => setIsPopupOpen(false)} />}
 				</div>
 			</div>
 			{error && (
@@ -96,9 +108,12 @@ const StackVisualizer: React.FC = () => {
 					<span className="block sm:inline">{error}</span>
 				</div>
 			)}
+
 			<div className="bg-gray-700 p-4 rounded-lg">
 				<p className="mb-4 text-lg font-semibold text-white">
-					Top Element: <span className="text-yellow-400">{getTopElement()}</span>
+					Top Element: <span className="text-yellow-400">{getTopElement()}</span><br />
+					Stack Size: <span className="text-yellow-400">{stack.length || 'Stack is empty'}</span>
+
 				</p>
 				<div className="space-y-2">
 					<AnimatePresence>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue Data Structure</title>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Queue Data Structure</h1>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Definition</h2>
+            <p>A queue is a linear data structure that follows the <strong>First-In-First-Out (FIFO)</strong> principle. It can be visualized as a line of people waiting for a service, where the first person to join the line is the first to be served.</p>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Operations and Time Complexities</h2>
+            <ul class="list-disc list-inside space-y-4">
+                <li>
+                    <strong>Enqueue:</strong> Add an element to the rear of the queue.
+                    <br>Time Complexity: O(1)
+                </li>
+                <li>
+                    <strong>Dequeue:</strong> Remove and return the front element from the queue.
+                    <br>Time Complexity: O(1)
+                </li>
+                <li>
+                    <strong>Front:</strong> Return the front element without removing it.
+                    <br>Time Complexity: O(1)
+                </li>
+                <li>
+                    <strong>Rear:</strong> Return the last element (most recently added) without removing it.
+                    <br>Time Complexity: O(1)
+                </li>
+                <li>
+                    <strong>Size:</strong> Return the number of elements in the queue.
+                    <br>Time Complexity: O(1)
+                </li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Advantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Simple and easy to implement</li>
+                <li>Efficient for first-in-first-out operations</li>
+                <li>All basic operations have constant time complexity</li>
+                <li>Useful for maintaining order of tasks or data</li>
+                <li>Supports both synchronous and asynchronous processing</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Disadvantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Limited access: Only front and rear elements are directly accessible</li>
+                <li>Not suitable for problems requiring random access to elements</li>
+                <li>Fixed size in array implementation can lead to queue overflow</li>
+                <li>Inefficient removal of elements from the middle</li>
+                <li>Potential for memory leaks if not properly managed in dynamic implementations</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Use Cases</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Task scheduling in operating systems</li>
+                <li>Breadth-First Search algorithm in graphs</li>
+                <li>Print job spooling</li>
+                <li>Handling of requests on a single shared resource (e.g., printer, CPU)</li>
+                <li>Buffering for data streams</li>
+                <li>Implementing cache</li>
+                <li>Message queues in inter-process communication</li>
+                <li>Call center phone systems</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

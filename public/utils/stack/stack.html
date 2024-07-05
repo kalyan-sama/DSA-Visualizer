@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Data Structure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Stack Data Structure</h1>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Definition</h2>
+            <p>A stack is a linear data structure that follows the <strong>Last-In-First-Out (LIFO)</strong> principle. It can be visualized as a stack of plates where you can only add or remove the top plate.</p>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Operations and Time Complexities</h2>
+            <ul class="list-disc list-inside space-y-4">
+                <li>
+                    <strong>Push:</strong> Add an element to the top of the stack.
+                    <br>Time Complexity: O(1)
+                </li>
+                <li>
+                    <strong>Pop:</strong> Remove and return the top element from the stack.
+                    <br>Time Complexity: O(1)
+                </li>
+                <li>
+                    <strong>Top (or Peek):</strong> Return the top element without removing it.
+                    <br>Time Complexity: O(1)
+                </li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Advantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Simple and easy to implement</li>
+                <li>Efficient for last-in-first-out operations</li>
+                <li>All operations have constant time complexity</li>
+                <li>Memory is managed efficiently with automatic clean up</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Disadvantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Limited access: Only the top element is accessible</li>
+                <li>Not suitable for problems requiring random access to elements</li>
+                <li>Possibility of stack overflow if not implemented with dynamic sizing</li>
+                <li>Lack of flexibility compared to more complex data structures</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Use Cases</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Function call management in programming languages (call stack)</li>
+                <li>Undo mechanisms in text editors and other applications</li>
+                <li>Expression evaluation and syntax parsing</li>
+                <li>Backtracking algorithms (e.g., maze solving, tree traversals)</li>
+                <li>Browser history (back button functionality)</li>
+                <li>Balanced parentheses checking in compilers</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

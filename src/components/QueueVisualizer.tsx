@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Popup from "./popup";
+// import '../utils/queue'
 
 const MAX_QUEUE_ITEMS = 20;
 
@@ -7,6 +9,8 @@ const QueueVisualizer: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [inputError, setInputError] = useState<string>("");
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+  
 
   useEffect(() => {
     if (error) {
@@ -28,7 +32,7 @@ const QueueVisualizer: React.FC = () => {
       return;
     }
     if (queue.length >= MAX_QUEUE_ITEMS) {
-      setError("Queue is full (max 10 items)");
+      setError(`Queue is full (max ${MAX_QUEUE_ITEMS} items)`);
       return;
     }
     setQueue([element, ...queue]);
@@ -45,6 +49,7 @@ const QueueVisualizer: React.FC = () => {
   };
 
   const front = () => queue[0] || "Queue is empty";
+  const rear = () => queue[queue.length-1] || "Queue is empty";
 
   const clearQueue = () => setQueue([]);
 
@@ -53,13 +58,14 @@ const QueueVisualizer: React.FC = () => {
       <h1 className="text-2xl text-white font-bold mb-6 text-center">
         Queue Visualizer
       </h1>
-      <div className="max-w-md mx-auto mb-6">
+      <div className="max-w-md mx-auto">
         <input
           type="text"
-          className={`w-full mb-2 p-3 border-2 rounded mb-1 text-black bg-gray-100 ${
+          className={`w-full mb-2 p-2 border-2 rounded mb-1 text-black bg-gray-100 ${
             inputError ? "border-red-500" : ""
           }`}
           placeholder="Enter a value to enqueue..."
+          maxLength={5}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && enqueue(inputValue)}
@@ -67,26 +73,36 @@ const QueueVisualizer: React.FC = () => {
         {inputError && (
           <p className="text-red-500 text-sm mb-2">{inputError}</p>
         )}
-        <div className="flex flex-row space-x-2 mb-3">
+        <div className="flex flex-col mb-6">
+          <div className="flex flex-row space-x-2 mb-2">
+            <button
+              className="flex-1 bg-purple-600 text-white font-semibold p-2 rounded hover:bg-purple-700"
+              onClick={() => enqueue(inputValue)}
+            >
+              Enqueue
+            </button>
+            <button
+              className="flex-1 bg-red-600 text-white font-semibold p-2 rounded hover:bg-red-700"
+              onClick={dequeue}
+            >
+              Dequeue
+            </button>
+            <button
+              className="flex-1 bg-yellow-600 text-white font-semibold p-2 rounded hover:bg-yellow-700"
+              onClick={clearQueue}
+            >
+              Clear Queue
+            </button>
+          </div>
           <button
-            className="flex-1 bg-purple-600 text-white font-semibold p-2 rounded hover:bg-purple-700"
-            onClick={() => enqueue(inputValue)}
+            onClick={() => setIsPopupOpen(true)}
+            className="flex-1 max-w-md py-2 bg-blue-600 text-white font-semibold rounded "
           >
-            Enqueue
+            Open Explanation & Code
           </button>
-          <button
-            className="flex-1 bg-red-600 text-white font-semibold p-2 rounded hover:bg-red-700"
-            onClick={dequeue}
-          >
-            Dequeue
-          </button>
-          <button
-            className="flex-1 bg-blue-600 text-white font-semibold p-2 rounded hover:bg-blue-700"
-            onClick={clearQueue}
-          >
-            Clear Queue
-          </button>
+          {isPopupOpen && <Popup codeFileName={"utils/queue/queue.py"} explanationFileName={"utils/queue/queue.html"} onClose={() => setIsPopupOpen(false)} />}
         </div>
+
         {error && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
@@ -96,10 +112,13 @@ const QueueVisualizer: React.FC = () => {
           </div>
         )}
       </div>
+      
 
       <div className="bg-gray-700 p-4 rounded-lg">
         <p className="mb-4 text-lg font-semibold text-white">
-          Front Element: <span className="text-yellow-400">{front()}</span>
+          Front Element: <span className="text-yellow-400 mr-6">{front()}</span> 
+          Rear Element: <span className="text-yellow-400 mr-6">{rear()}</span>
+          Queue Length: <span className="text-yellow-400 mr-6">{queue.length || 'Queue is empty'}</span>
         </p>
         <div className="flex justify-between items-center mb-2"></div>
 
@@ -109,7 +128,7 @@ const QueueVisualizer: React.FC = () => {
             <React.Fragment key={index}>
               <div
                 key={`${item}-${index}`}
-                className="top-0 left-0 border-2 text-center border-white rounded border-2 p-3 text-white w-16 mr-1"
+                className=" border-2 text-center border-white rounded border-2 p-3 text-white  mr-1"
               >
                 {item}
               </div>
