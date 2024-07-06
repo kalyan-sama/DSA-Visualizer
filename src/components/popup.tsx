@@ -3,11 +3,12 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { nightOwl } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { FaRegCopy } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 interface PopupProps {
   onClose: () => void;
-  codeFileName: any;
-  explanationFileName: any;
+  codeFileName: string;
+  explanationFileName: string;
 }
 
 const Popup: React.FC<PopupProps> = ({
@@ -15,11 +16,11 @@ const Popup: React.FC<PopupProps> = ({
   codeFileName,
   explanationFileName,
 }) => {
-  const [activeTab, setActiveTab] = useState<"explanation" | "code">(
-    "explanation"
-  );
+  const [activeTab, setActiveTab] = useState<"Explanation" | "Code">("Explanation");
   const [data, setData] = useState<string>("");
-  const [explanation, setExplanation] = useState<string>("");
+  const [ExplanationHtml, setExplanationHtml] = useState<string>("");
+  const [copied, setCopied] = useState(false);
+
   const customStyle = {
     borderRadius: "10px",
     backgroundColor: "#030712",
@@ -28,65 +29,81 @@ const Popup: React.FC<PopupProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const codeResponse = await fetch("/" + codeFileName);
-        const explanationResponse = await fetch("/" + explanationFileName);
-        const sourceCode = await codeResponse.text();
-        const explanationText = await explanationResponse.text();
+        const [codeResponse, explanationResponse] = await Promise.all([
+          fetch("/" + codeFileName),
+          fetch("/" + explanationFileName)
+        ]);
+        const [sourceCode, explanationText] = await Promise.all([
+          codeResponse.text(),
+          explanationResponse.text()
+        ]);
         setData(sourceCode);
-        setExplanation(explanationText);
+        setExplanationHtml(explanationText);
       } catch (error) {
         console.error("Error fetching the text file:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [codeFileName, explanationFileName]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(data);
-    alert("Code copied to clipboard!");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-gray-900 rounded-lg w-3/4 h-5/6 border-white border-2 flex flex-col">
-        <div className="flex justify-between p-3 border-b">
-          <h2 className="text-2xl font-bold">Explanation & Code</h2>
-          <button onClick={onClose} className="text-red-500 rounded">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20">
+      <div className="bg-gray-900 rounded-lg w-full max-w-5xl min-w-[300px] h-5/6 border-white border-2 flex flex-col shadow-3xl ">
+        <div className="flex justify-between p-3 border-b border-gray-700">
+          <h2 className="text-2xl font-bold text-white">Explanation & Code</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-red-500 transition-colors duration-200"
+          >
             <IoClose size={30} />
           </button>
         </div>
-        <div className="flex border-b">
-          <button
-            className={`flex-1 p-2 font-semibold text-xl ${activeTab === "explanation" ? "border-b-2 border-blue-500" : ""}`}
-            onClick={() => setActiveTab("explanation")}
+        <div className="flex border-b border-gray-700">
+          {["Explanation", "Code"].map((tab) => (
+            <button
+            key={tab}
+            className={`flex-1 p-2 font-semibold text-xl transition-all duration-200 focus:outline-none ${
+              activeTab === tab
+                ? "border-b-2 border-blue-500 text-blue-500"
+                : "text-gray-400 hover:text-gray-100  "
+            }`}
+            onClick={() => setActiveTab(tab as "Explanation" | "Code")}
           >
-            Explanation
+            {/* {tab.charAt(0).toUpperCase() + tab.slice(1)} */}
+            {tab}
           </button>
-          <button
-            className={`flex-1 p-2 font-semibold text-xl ${activeTab === "code" ? "border-b-2 border-blue-500" : ""}`}
-            onClick={() => setActiveTab("code")}
-          >
-            Code
-          </button>
+          ))}
         </div>
 
         <div className="flex-1 overflow-auto">
-          {activeTab === "explanation" && (
-            <div dangerouslySetInnerHTML={{ __html: explanation }} />
+          {activeTab === "Explanation" && (
+            <div
+              className="px-6"
+              dangerouslySetInnerHTML={{ __html: ExplanationHtml }}
+            />
           )}
-          {activeTab === "code" && (
-            <div className=" relative overflow-auto p-4 ">
-              <div className="">
+          {activeTab === "Code" && (
+            <div className="relative px-6 py-2">
+              <div className="sticky top-0  w-full z-10 flex justify-end">
                 <button
                   onClick={copyToClipboard}
-                  className=" sticky top-0 right-0 px-2 py-2 bg-blue-500 text-white rounded-full opacity-50"
+                  className={`px-2 py-2 mt-2 mr-2 text-white rounded-full ${
+                    copied ? "bg-green-500" : "bg-blue-600"
+                  }`}
                 >
-                  <FaRegCopy />
+                  {copied ? <IoMdCheckmarkCircleOutline /> : <FaRegCopy />}
                 </button>
               </div>
               <SyntaxHighlighter
                 language="python"
                 style={nightOwl}
+                showLineNumbers={true}
                 customStyle={customStyle}
               >
                 {data}
@@ -98,4 +115,5 @@ const Popup: React.FC<PopupProps> = ({
     </div>
   );
 };
+
 export default Popup;
