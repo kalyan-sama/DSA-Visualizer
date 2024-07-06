@@ -9,6 +9,7 @@ import ReactFlow, {
   useEdgesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import Popup from "./popup";
 
 interface TreeNode {
   value: number;
@@ -33,6 +34,7 @@ const BST: React.FC = () => {
   const [inputError, setInputError] = useState<string>("");
   const [isAutoMode, setIsAutoMode] = useState(false);
   const rootRef = useRef<TreeNode | null>(null);
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const createTreeNode = (value: number): TreeNode => {
     return { value, left: null, right: null };
@@ -395,35 +397,40 @@ const BST: React.FC = () => {
     return steps;
   };
 
-  const generateDeleteSteps = (root: TreeNode | null, value: number): Function[] => {
+  const generateDeleteSteps = (
+    root: TreeNode | null,
+    value: number
+  ): Function[] => {
     const steps: Function[] = [];
     let current = root;
     let parent: TreeNode | null = null;
     let path: string[] = [];
-  
+
     // Step 1: Search for the node to delete
     while (current && current.value !== value) {
       const currentId = current.value.toString();
       const parentId = parent ? parent.value.toString() : null;
-      
+
       steps.push(() => {
         updateNodeStyle(currentId, border_yellow, bg_yellow);
         if (parentId) {
           updateEdgeStyle(parentId, currentId, border_yellow);
         }
-        setMessage(`Deleting: Searching for ${value}: Comparing with ${currentId}`);
+        setMessage(
+          `Deleting: Searching for ${value}: Comparing with ${currentId}`
+        );
       });
-  
+
       parent = current;
       path.push(currentId);
-  
+
       if (value < current.value) {
         current = current.left;
       } else {
         current = current.right;
       }
     }
-  
+
     if (!current) {
       steps.push(() => {
         setMessage(`Value ${value} not found in the tree`);
@@ -431,10 +438,10 @@ const BST: React.FC = () => {
       steps.push(resetStyles);
       return steps;
     }
-  
+
     const currentId = current.value.toString();
     const parentId = parent ? parent.value.toString() : null;
-  
+
     // Step 2: Node found, highlight it
     steps.push(() => {
       updateNodeStyle(currentId, border_red, bg_red);
@@ -443,7 +450,7 @@ const BST: React.FC = () => {
       }
       setMessage(`Found node to delete: ${currentId}`);
     });
-  
+
     // Step 3: Handle deletion based on node type (leaf, one child, or two children)
     if (!current.left && !current.right) {
       // Leaf node
@@ -472,30 +479,42 @@ const BST: React.FC = () => {
         successor = successor.left;
       }
       const successorId = successor.value.toString();
-      
+
       steps.push(() => {
         updateNodeStyle(successorId, border_green, bg_green);
-        updateEdgeStyle(successorParent.value.toString(), successorId, border_green);
+        updateEdgeStyle(
+          successorParent.value.toString(),
+          successorId,
+          border_green
+        );
         setMessage(`Found inorder successor: ${successorId}`);
       });
-      
+
       steps.push(() => {
         updateNodeStyle(currentId, border_green, bg_green);
         updateEdgeStyle(parentId!, currentId, border_green);
-        setMessage(`Replacing ${currentId} with inorder successor ${successorId}`);
+        setMessage(
+          `Replacing ${currentId} with inorder successor ${successorId}`
+        );
       });
     }
 
     // Step 4: Update the tree structure
     steps.push(() => {
       rootRef.current = deleteNode(rootRef.current, value);
-      const newNodes = createFlowNodes(rootRef.current, 300, 50, 0, getTreeWidth(rootRef.current));
+      const newNodes = createFlowNodes(
+        rootRef.current,
+        300,
+        50,
+        0,
+        getTreeWidth(rootRef.current)
+      );
       const newEdges = createFlowEdges(rootRef.current);
       setNodes(newNodes);
       setEdges(newEdges);
       setMessage(`Node ${value} deleted from the tree`);
     });
-  
+
     steps.push(resetStyles);
     return steps;
   };
@@ -550,7 +569,9 @@ const BST: React.FC = () => {
     }
     const newSteps = generateInsertSteps(rootRef.current, value);
     setSteps(newSteps);
-    setMessage(`Inserting ${value} into the current tree (click on Next/Auto to continue)`);
+    setMessage(
+      `Inserting ${value} into the current tree (click on Next/Auto to continue)`
+    );
     resetAutoMode();
     setInputValue("");
   };
@@ -563,7 +584,9 @@ const BST: React.FC = () => {
     }
     const newSteps = generateSearchSteps(rootRef.current, value);
     setSteps(newSteps);
-    setMessage(`Searching for ${value} in the current tree (click on Next/Auto to continue)`);
+    setMessage(
+      `Searching for ${value} in the current tree (click on Next/Auto to continue)`
+    );
     resetAutoMode();
     setInputValue("");
   };
@@ -627,75 +650,80 @@ const BST: React.FC = () => {
           BST Visualizer
         </h2>
         <div className="flex flex-col">
-  <button
-    onClick={handleNewTree}
-    className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mt-3"
-    disabled={isAutoMode}
-  >
-    Generate New Tree
-  </button>
-  <div className="mb-3">
-    <input
-      type="number"
-      value={inputValue}
-      onChange={handleInputChange}
-      className={`w-full p-2 border-2 rounded-lg text-white bg-gray-800 ${
-        inputError ? "border-red-500" : "border-white"
-      }`}
-      placeholder="Enter an input value..."
-    />
-    {inputError && (
-      <div className="mt-1 text-red-500 text-xs">
-        {inputError}
-      </div>
-    )}
-    <div className="flex mt-3">
-      <button
-        onClick={handleInsert}
-        className="flex-1 bg-blue-500 font-semibold text-white py-2 rounded mr-2"
-        disabled={isAutoMode}
-      >
-        Insert
-      </button>
-      <button
-        onClick={handleSearch}
-        className="flex-1 bg-purple-500 font-semibold text-white py-2 rounded mr-2"
-        disabled={isAutoMode}
-      >
-        Search
-      </button>
-      <button
-        onClick={handleDelete}
-        className="flex-1 bg-red-500 font-semibold text-white py-2 rounded"
-        disabled={isAutoMode}
-      >
-        Delete
-      </button>
-    </div>
-  </div>
-  <div className="flex">
-    <button
-      onClick={handleNext}
-      className="flex-1 bg-green-500 font-semibold text-white p-2 rounded mr-2"
-      disabled={isAutoMode || steps.length === 0}
-    >
-      Next
-    </button>
-    <button
-      onClick={handleAuto}
-      className={`flex-1 text-white font-semibold p-2 rounded ${
-        isAutoMode ? "bg-red-600" : "bg-yellow-600"
-      }`}
-    >
-      {isAutoMode ? "Pause" : "Auto"}
-    </button>
-  </div>
-  <div className="mt-4">
-    <p className="text-xl underline font-bold">Operation Steps:</p>
-    <p>{message}</p>
-  </div>
-</div>
+          <button
+            onClick={handleNewTree}
+            className="bg-purple-800 text-white font-semibold p-2 rounded hover:bg-purple-900 mb-3 mt-3"
+            disabled={isAutoMode}
+          >
+            Generate New Tree
+          </button>
+          <div className="mb-3">
+            <input
+              type="number"
+              value={inputValue}
+              onChange={handleInputChange}
+              className={`w-full p-2 border-2 rounded-lg text-white bg-gray-800 ${
+                inputError ? "border-red-500" : "border-white"
+              }`}
+              placeholder="Enter an input value..."
+            />
+            {inputError && (
+              <div className="mt-1 text-red-500 text-xs">{inputError}</div>
+            )}
+            <div className="flex mt-3">
+              <button
+                onClick={handleInsert}
+                className="flex-1 bg-blue-500 font-semibold text-white py-2 rounded mr-2"
+                disabled={isAutoMode}
+              >
+                Insert
+              </button>
+              <button
+                onClick={handleSearch}
+                className="flex-1 bg-purple-500 font-semibold text-white py-2 rounded mr-2"
+                disabled={isAutoMode}
+              >
+                Search
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex-1 bg-red-500 font-semibold text-white py-2 rounded"
+                disabled={isAutoMode}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+          <div className="flex">
+            <button
+              onClick={handleNext}
+              className="flex-1 bg-green-500 font-semibold text-white p-2 rounded mr-2"
+              disabled={isAutoMode || steps.length === 0}
+            >
+              Next
+            </button>
+            <button
+              onClick={handleAuto}
+              className={`flex-1 text-white font-semibold p-2 rounded ${
+                isAutoMode ? "bg-red-600" : "bg-yellow-600"
+              }`}
+            >
+              {isAutoMode ? "Pause" : "Auto"}
+            </button>
+          </div>
+          <button
+						onClick={() => setIsPopupOpen(true)}
+						className="flex-1 max-w-md mt-3 py-2 bg-blue-600 text-white font-semibold rounded mb-4"
+					>
+						Open Explanation & Code
+					</button>
+					{isPopupOpen && <Popup codeFileName={"utils/BST/BST.py"} explanationFileName={"utils/BST/BST.html"} onClose={() => setIsPopupOpen(false)} />}
 
+          <div className="mt-4">
+            <p className="text-xl underline font-bold">Operation Steps:</p>
+            <p>{message}</p>
+          </div>
+        </div>
       </div>
       <div className="w-3/4 border-2 border-white">
         <ReactFlow
@@ -710,11 +738,9 @@ const BST: React.FC = () => {
           nodesDraggable={false}
           fitView
         >
-            <Background/ >
-            <Controls 
-              showInteractive={false}>
-            </Controls>
-            </ReactFlow>
+          <Background />
+          <Controls showInteractive={false}></Controls>
+        </ReactFlow>
       </div>
     </div>
   );

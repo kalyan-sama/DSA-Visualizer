@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Search Tree (BST)</title>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Binary Search Tree (BST)</h1>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Definition</h2>
+            <p>A Binary Search Tree (BST) is a node-based binary tree data structure which has the following properties:</p>
+            <ul class="list-disc list-inside mt-2">
+                <li>The left subtree of a node contains only nodes with keys lesser than the node's key.</li>
+                <li>The right subtree of a node contains only nodes with keys greater than the node's key.</li>
+                <li>The left and right subtree each must also be a binary search tree.</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Operations and Time Complexities</h2>
+            <ul class="list-disc list-inside space-y-4">
+                <li>
+                    <strong>Insertion:</strong> Add a new node to the tree
+                    <br>Time Complexity: Average O(log n), Worst O(n)
+                </li>
+                <li>
+                    <strong>Deletion:</strong> Remove a node from the tree
+                    <br>Time Complexity: Average O(log n), Worst O(n)
+                </li>
+                <li>
+                    <strong>Search:</strong> Find a node in the tree
+                    <br>Time Complexity: Average O(log n), Worst O(n)
+                </li>
+                <li>
+                    <strong>Traversal:</strong> Visit all nodes of the tree
+                    <br>Time Complexity: O(n)
+                </li>
+            </ul>
+        </div>
+
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Deletion in BST</h2>
+            <p class="mb-4">Deletion in a BST can be categorized into three cases:</p>
+            <ol class="list-decimal list-inside space-y-4">
+                <li>
+                    <strong>Deleting a leaf node:</strong>
+                    <p class="ml-6">Simply remove the node from the tree.</p>
+                </li>
+                <li>
+                    <strong>Deleting a node with one child:</strong>
+                    <p class="ml-6">Replace the node with its child.</p>
+                </li>
+                <li>
+                    <strong>Deleting a node with two children:</strong>
+                    <p class="ml-6">
+                        1. Find the inorder successor (smallest node in right subtree).<br>
+                        2. Replace the node to be deleted with the inorder successor.<br>
+                        3. Delete the inorder successor from its original position.
+                    </p>
+                </li>
+            </ol>
+        </div>
+
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Traversal Methods</h2>
+            <p class="mb-4">There are three main types of traversals in a BST:</p>
+            <ul class="list-disc list-inside space-y-4">
+                <li>
+                    <strong>Inorder Traversal (Left, Root, Right):</strong>
+                    <p class="ml-6">
+                        1. Recursively traverse the left subtree.<br>
+                        2. Visit the root.<br>
+                        3. Recursively traverse the right subtree.<br>
+                        Result: Nodes in ascending order.
+                    </p>
+                </li>
+                <li>
+                    <strong>Preorder Traversal (Root, Left, Right):</strong>
+                    <p class="ml-6">
+                        1. Visit the root.<br>
+                        2. Recursively traverse the left subtree.<br>
+                        3. Recursively traverse the right subtree.<br>
+                        Use: Creating a copy of the tree or prefix expression.
+                    </p>
+                </li>
+                <li>
+                    <strong>Postorder Traversal (Left, Right, Root):</strong>
+                    <p class="ml-6">
+                        1. Recursively traverse the left subtree.<br>
+                        2. Recursively traverse the right subtree.<br>
+                        3. Visit the root.<br>
+                        Use: Deleting the tree or postfix expression.
+                    </p>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Advantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Efficient searching, insertion, and deletion operations</li>
+                <li>Maintains sorted data structure</li>
+                <li>Allows for quick access to the minimum and maximum elements</li>
+                <li>Can be used to implement other data structures like sets and maps</li>
+                <li>Inorder traversal gives sorted output</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Disadvantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Can become unbalanced, leading to worst-case time complexity of O(n)</li>
+                <li>No constant time operations (unlike arrays)</li>
+                <li>More complex to implement compared to basic data structures</li>
+                <li>Not cache-friendly due to pointer-based structure</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Use Cases</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Implementing symbol tables in compilers</li>
+                <li>Database indexing</li>
+                <li>File system indexing</li>
+                <li>Implementing priority queues</li>
+                <li>Expression evaluation and syntax parsing</li>
+                <li>Implementing associative arrays (dictionaries)</li>
+                <li>Used in various searching algorithms</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
