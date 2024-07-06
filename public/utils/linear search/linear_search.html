@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Search Algorithm</title>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Linear Search Algorithm</h1>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Definition</h2>
+            <p>Linear search, also known as sequential search, is a simple searching algorithm that checks each element in a list sequentially until a match is found or the entire list has been searched.</p>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">How It Works</h2>
+            <ol class="list-decimal list-inside space-y-2">
+                <li>Start from the first element of the list.</li>
+                <li>Compare the current element with the target value.</li>
+                <li>If they match, return the current position.</li>
+                <li>If they don't match, move to the next element.</li>
+                <li>Repeat steps 2-4 until the element is found or the end of the list is reached.</li>
+                <li>If the end of the list is reached without finding the element, return a signal (e.g., -1) to indicate the element was not found.</li>
+            </ol>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Time and Space Complexity</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Time Complexity:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Best Case: O(1) - when the target element is at the beginning</li>
+                        <li>Worst Case: O(n) - when the target element is at the end or not present</li>
+                        <li>Average Case: O(n) - on average, need to search half the list</li>
+                    </ul>
+                </li>
+                <li>Space Complexity: O(1) - only requires a constant amount of additional space</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Advantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Simple to understand and implement</li>
+                <li>Works on unsorted lists</li>
+                <li>No need for additional data structures</li>
+                <li>Efficient for small lists</li>
+                <li>Can be used on lists of any data type</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Disadvantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Inefficient for large lists</li>
+                <li>Slower compared to other search algorithms like binary search for sorted lists</li>
+                <li>Not suitable for large datasets in time-critical applications</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Use Cases</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Searching in small unsorted lists</li>
+                <li>Searching for a known position (e.g., first or last occurrence)</li>
+                <li>One-time searches where setting up complex data structures isn't worth it</li>
+                <li>Searching in data structures that don't support random access (e.g., linked lists)</li>
+                <li>As a subroutine in more complex algorithms</li>
+                <li>In situations where simplicity is more important than efficiency</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

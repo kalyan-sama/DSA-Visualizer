@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Popup from "./popup";
 
 const MAX_ARRAY_SIZE = 15;
 
@@ -13,6 +14,7 @@ const LinearSearchVisualizer: React.FC = () => {
   const [keyError, setKeyError] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
     generateRandomArray(MAX_ARRAY_SIZE);
@@ -117,6 +119,15 @@ const LinearSearchVisualizer: React.FC = () => {
           >
             {isAutoPlaying ? "Pause" : "Auto"}
           </button>
+
+          <button
+						onClick={() => setIsPopupOpen(true)}
+						className="py-2 bg-blue-600 px-2 text-white font-semibold rounded mb-3"
+					>
+						Open Explanation & Code
+					</button>
+					{isPopupOpen && <Popup codeFileName={"utils/linear search/linear_search.py"} explanationFileName={"utils/linear search/linear_search.html"} onClose={() => setIsPopupOpen(false)} />}
+
         </div>
 
         {/* End of buttons Section */}

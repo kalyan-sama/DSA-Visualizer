@@ -53,7 +53,7 @@ const Popup: React.FC<PopupProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
       <div className="bg-gray-900 rounded-lg w-full max-w-5xl min-w-[300px] h-5/6 border-white border-2 flex flex-col shadow-3xl ">
         <div className="flex justify-between p-3 border-b border-gray-700">
           <h2 className="text-2xl font-bold text-white">Explanation & Code</h2>

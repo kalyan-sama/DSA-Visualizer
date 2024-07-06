@@ -13,6 +13,7 @@ import ReactFlow, {
   ReactFlowInstance,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import Popup from "./popup";
 
 interface CustomNodeData {
   value: ({ value: number; highlight: boolean } | number | null)[];
@@ -342,6 +343,8 @@ function MergeSortVisualizer() {
   const [array, setArray] = useState<number[]>([]);
   const [stepExplanation, setStepExplanation] = useState<string>("");
   const [isAutoMode, setIsAutoMode] = useState(false);
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+  
   console.log(array);
   useEffect(() => {
     if (array.length === 0) {
@@ -455,11 +458,20 @@ function MergeSortVisualizer() {
             </button>
           </div>
           <button
-            className={`flex-1 text-white font-semibold p-2 rounded ${isAutoMode ? "bg-red-600" : "bg-yellow-600"}`}
+            className={`flex-1 text-white font-semibold p-2 rounded mb-2 ${isAutoMode ? "bg-red-600" : "bg-yellow-600"}`}
             onClick={toggleAutoMode}
           >
             {isAutoMode ? "Pause" : "Auto"}
           </button>
+
+          <button
+						onClick={() => setIsPopupOpen(true)}
+						className="flex-1 max-w-md mt-2 py-2 bg-blue-600 text-white font-semibold rounded mb-4"
+					>
+						Open Explanation & Code
+					</button>
+					{isPopupOpen && <Popup codeFileName={"utils/merge sort/merge_sort.py"} explanationFileName={"utils/merge sort/merge_sort.html"} onClose={() => setIsPopupOpen(false)} />}
+
         </div>
         <div className="mt-4">
           <h3 className="text-xl underline font-bold">Sorting Steps:</h3>

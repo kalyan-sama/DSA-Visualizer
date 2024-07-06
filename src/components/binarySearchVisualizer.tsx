@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Popup from "./popup";
 
 const MAX_ARRAY_SIZE = 15;
 
@@ -16,6 +17,7 @@ const BinarySearchVisualizer: React.FC = () => {
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
   const [midDisplayed, setMidDisplayed] = useState<boolean>(false);
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
     generateRandomSortedArray(MAX_ARRAY_SIZE);
@@ -138,8 +140,16 @@ const BinarySearchVisualizer: React.FC = () => {
           >
             {isAutoPlaying ? "Pause" : "Auto"}
           </button>
-        </div>
 
+          <button
+						onClick={() => setIsPopupOpen(true)}
+						className="py-2 bg-blue-600 px-2 text-white font-semibold rounded mb-3"
+					>
+						Open Explanation & Code
+					</button>
+					{isPopupOpen && <Popup codeFileName={"utils/binary search/binary_search.py"} explanationFileName={"utils/binary search/binary_search.html"} onClose={() => setIsPopupOpen(false)} />}
+
+        </div>
         {/* End of buttons Section */}
 
         {/* Array display section */}

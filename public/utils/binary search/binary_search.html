@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Search Algorithm</title>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Binary Search Algorithm</h1>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Basic Definition</h2>
+            <p>Binary search is an efficient algorithm for searching a sorted array by repeatedly dividing the search interval in half. It compares the target value to the middle element of the array; if they are unequal, the half in which the target cannot lie is eliminated, and the search continues on the remaining half until the target is found or it's clear the target is not in the array.</p>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">How It Works</h2>
+            <ol class="list-decimal list-inside space-y-2">
+                <li>Start with the middle element of the entire array.</li>
+                <li>If the target value is equal to the middle element, the search ends.</li>
+                <li>If the target value is less than the middle element, continue the search on the lower half.</li>
+                <li>If the target value is greater than the middle element, continue the search on the upper half.</li>
+                <li>Repeat the process until the value is found or it's clear the value is not in the array.</li>
+            </ol>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Time and Space Complexity</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Time Complexity:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Best Case: O(1) - when the target element is the middle element</li>
+                        <li>Worst Case: O(log n) - when the target element is at the end or not present</li>
+                        <li>Average Case: O(log n)</li>
+                    </ul>
+                </li>
+                <li>Space Complexity:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Iterative: O(1) - only requires a constant amount of additional space</li>
+                        <li>Recursive: O(log n) - due to the call stack</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Advantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Very efficient for large sorted datasets</li>
+                <li>Logarithmic time complexity makes it much faster than linear search for large arrays</li>
+                <li>Requires no additional space (in iterative implementation)</li>
+                <li>Can be implemented both iteratively and recursively</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Disadvantages</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Only works on sorted arrays</li>
+                <li>Not efficient for small datasets compared to linear search</li>
+                <li>Requires direct access to elements (not suitable for linked lists)</li>
+                <li>Sorting the array first may negate time savings if many searches aren't needed</li>
+            </ul>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Use Cases</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Searching in large sorted arrays or lists</li>
+                <li>Implementing efficient lookup tables</li>
+                <li>Finding insert positions in sorted data structures</li>
+                <li>Used in binary search trees and other data structures</li>
+                <li>Optimization problems (e.g., finding roots of monotonic functions)</li>
+                <li>Database indexing and searching</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
